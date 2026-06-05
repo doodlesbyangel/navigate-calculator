@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navigate — Wealth Planning Calculator</title>
+<style>
+/* ============================================================
+   NAVIGATE WEALTH PLANNING CALCULATOR v3
+   BPI Wealth — Ruby Red / Gold / White Premium Theme
+   Retirement Planning + Estate Planning
+   ============================================================ */
+:root {
+  --ruby:     #9B1B2A; --ruby-dk:  #7a1320; --ruby-bg:  #fdf4f5; --ruby-bdr: #f5c6cc;
+  --gold:     #C9A84C; --gold-dk:  #a07c28; --gold-bg:  #fdf8ed; --gold-bdr: #edd998;
+  --green:    #1a6e42; --green-bg: #eef8f3; --green-bdr:#a8ddc0;
+  --navy:     #1a2e4a; --navy-bg:  #f0f4f9; --navy-bdr: #b8cde0;
+  --white:    #ffffff; --offwhite: #f8f7f5;
+  --g50:      #f4f3f1; --g100:     #ebebе8; --g200:     #d8d6d1;
+  --g400:     #9c9891; --g600:     #6a6760; --g800:     #2c2a27;
+  --sh-sm:    0 1px 3px rgba(0,0,0,.07),0 1px 8px rgba(0,0,0,.05);
+  --sh-md:    0 4px 16px rgba(0,0,0,.09);
+  --r:        12px; --r-sm: 8px;
+  --font:     'Montserrat','Segoe UI',Arial,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--offwhite);color:var(--g800);-webkit-font-smoothing:antialiased;font-size:15px}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(140deg,var(--ruby-dk) 0%,var(--ruby) 60%,#b82235 100%);padding:44px 40px 40px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(201,168,76,.15)}
+.hero::after{content:'';position:absolute;bottom:-50px;left:8%;width:200px;height:200px;border-radius:50%;background:rgba(255,255,255,.05)}
+.hero-inner{max-width:1080px;margin:0 auto;position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.hero-badge{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);border-radius:20px;padding:4px 13px;margin-bottom:14px;font-size:.72rem;font-weight:700;color:rgba(255,255,255,.88);letter-spacing:.07em;text-transform:uppercase}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
+.hero h1{font-size:2.1rem;font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.1;margin-bottom:8px}
+.hero h1 em{color:#e8c96a;font-style:normal}
+.hero p{font-size:.88rem;color:rgba(255,255,255,.78);max-width:500px;line-height:1.65}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;align-self:flex-end}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 18px;border:none;border-radius:var(--r-sm);font-family:var(--font);font-size:.78rem;font-weight:700;cursor:pointer;transition:all .18s;white-space:nowrap}
+.btn svg{width:14px;height:14px;flex-shrink:0}
+.btn-gold{background:var(--gold);color:#fff}
+.btn-gold:hover{background:var(--gold-dk);box-shadow:0 4px 12px rgba(201,168,76,.3)}
+.btn-ghost{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.28)}
+.btn-ghost:hover{background:rgba(255,255,255,.24)}
+.btn-outline{background:transparent;color:var(--ruby);border:1.5px solid var(--ruby)}
+.btn-outline:hover{background:var(--ruby-bg)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px 80px}
+.two-col{display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start;margin-top:28px}
+.col-left{position:sticky;top:20px;display:flex;flex-direction:column;gap:14px}
+
+/* ── CARDS ── */
+.card{background:var(--white);border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid #eeecea}
+.card-hd{padding:14px 20px 11px;border-bottom:1px solid #f0eeeb;display:flex;align-items:center;gap:9px}
+.card-hd-icon{width:28px;height:28px;border-radius:7px;background:var(--ruby-bg);display:flex;align-items:center;justify-content:center;font-size:.82rem;flex-shrink:0}
+.card-hd h3{font-size:.86rem;font-weight:700;color:var(--g800)}
+.card-bd{padding:14px 20px}
+
+/* ── FORM ── */
+.field{margin-bottom:11px}
+.field:last-child{margin-bottom:0}
+.lbl{display:block;font-size:.71rem;font-weight:700;color:var(--g600);margin-bottom:3px;letter-spacing:.02em}
+.hint{font-size:.67rem;color:var(--g400);margin-top:2px;font-style:italic;line-height:1.4}
+.fi{position:relative}
+.pre{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.76rem;color:var(--g400);font-weight:600;pointer-events:none}
+.suf{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:.72rem;color:var(--g400);font-weight:600;pointer-events:none}
+input[type=number],input[type=text],select{width:100%;height:36px;border:1.5px solid var(--g200);border-radius:var(--r-sm);background:var(--white);font-family:var(--font);font-size:.83rem;color:var(--g800);outline:none;padding:0 10px;transition:border-color .14s,box-shadow .14s}
+input.pl{padding-left:22px}
+input.pr{padding-right:26px}
+input[type=number]:focus,input[type=text]:focus,select:focus{border-color:var(--ruby);box-shadow:0 0 0 3px rgba(155,27,42,.08)}
+input[type=number]::-webkit-inner-spin-button{opacity:0}
+select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%239c9891' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;cursor:pointer}
+.field-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sep-label{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--g400);margin:13px 0 9px;display:block;border-top:1px solid #f0eeeb;padding-top:11px}
+
+/* ── RESULT TABS ── */
+.result-tabs{display:flex;gap:3px;background:var(--g50);border-radius:10px;padding:3px;margin-bottom:20px;margin-top:28px}
+.rtab-btn{flex:1;padding:10px 12px;border:none;background:none;border-radius:8px;font-family:var(--font);font-size:.78rem;font-weight:700;color:var(--g600);cursor:pointer;transition:all .18s;line-height:1.3;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px}
+.rtab-btn.active{background:var(--white);color:var(--ruby);box-shadow:var(--sh-sm)}
+.rtab-panel{display:none}
+.rtab-panel.active{display:block;animation:fadeUp .25s ease}
+
+/* ── VERDICT ── */
+.verdict{border-radius:var(--r);padding:20px 22px;margin-bottom:18px;position:relative;overflow:hidden}
+.verdict::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.verdict.gap::before{background:linear-gradient(90deg,var(--ruby),#c42538)}
+.verdict.ok::before{background:linear-gradient(90deg,var(--green),#2da36a)}
+.verdict.estate::before{background:linear-gradient(90deg,var(--navy),#2a5298)}
+.verdict-lbl{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px}
+.verdict.gap .verdict-lbl{color:var(--ruby)}
+.verdict.ok  .verdict-lbl{color:var(--green)}
+.verdict.estate .verdict-lbl{color:var(--navy)}
+.verdict-hdg{font-size:1rem;font-weight:800;color:var(--g800);line-height:1.35;margin-bottom:4px}
+.verdict-sub{font-size:.80rem;color:var(--g600);line-height:1.55}
+.verdict.gap{background:linear-gradient(135deg,#fdf4f5,#fff9f9)}
+.verdict.ok {background:linear-gradient(135deg,#eef8f3,#f8fdfb)}
+.verdict.estate{background:linear-gradient(135deg,var(--navy-bg),#f8fafc)}
+
+/* ── RESULT CARDS ── */
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.rc{border-radius:var(--r-sm);padding:15px 17px;border:1px solid transparent}
+.rc.ruby {background:var(--ruby-bg);border-color:var(--ruby-bdr)}
+.rc.gold {background:var(--gold-bg);border-color:var(--gold-bdr)}
+.rc.green{background:var(--green-bg);border-color:var(--green-bdr)}
+.rc.navy {background:var(--navy-bg);border-color:var(--navy-bdr)}
+.rc.muted{background:var(--g50);border-color:var(--g200)}
+.rc-full{grid-column:1/-1}
+.rc-label{font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g400);margin-bottom:4px}
+.rc-val{font-size:1.45rem;font-weight:800;line-height:1.1;font-variant-numeric:tabular-nums}
+.rc.ruby  .rc-val{color:var(--ruby)}
+.rc.gold  .rc-val{color:var(--gold-dk)}
+.rc.green .rc-val{color:var(--green)}
+.rc.navy  .rc-val{color:var(--navy)}
+.rc.muted .rc-val{color:var(--g800)}
+.rc-sub{font-size:.68rem;color:var(--g400);margin-top:3px;line-height:1.4}
+
+/* ── SECTION CARD ── */
+.sc{background:var(--white);border-radius:var(--r);box-shadow:var(--sh-sm);border:1px solid #eeecea;padding:20px 22px;margin-bottom:16px}
+.sc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sc-hd h2{font-size:.98rem;font-weight:800;color:var(--g800)}
+.sc-hd p{font-size:.73rem;color:var(--g400)}
+
+/* ── SCENARIO TABS ── */
+.tabs{display:flex;gap:3px;background:var(--g50);border-radius:10px;padding:3px;margin-bottom:14px}
+.tab-btn{flex:1;padding:8px 10px;border:none;background:none;border-radius:8px;font-family:var(--font);font-size:.72rem;font-weight:700;color:var(--g600);cursor:pointer;transition:all .18s;text-align:center}
+.tab-btn.active{background:var(--white);color:var(--ruby);box-shadow:var(--sh-sm)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeUp .22s ease}
+
+/* ── SCENARIO INTRO ── */
+.sc-intro{border-radius:var(--r-sm);padding:15px 17px;margin-bottom:13px}
+.sc-intro.ruby{background:var(--ruby-bg);border:1px solid var(--ruby-bdr)}
+.sc-intro.gold{background:var(--gold-bg);border:1px solid var(--gold-bdr)}
+.sc-intro.muted{background:var(--g50);border:1px solid var(--g200)}
+.sc-tag{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.09em;margin-bottom:4px}
+.sc-intro.ruby .sc-tag{color:var(--ruby)}
+.sc-intro.gold .sc-tag{color:var(--gold-dk)}
+.sc-intro.muted .sc-tag{color:var(--g600)}
+.sc-title{font-size:.92rem;font-weight:800;color:var(--g800);margin-bottom:3px}
+.sc-desc{font-size:.77rem;color:var(--g600);line-height:1.55}
+.sc-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.sc-stat-label{font-size:.63rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);margin-bottom:2px}
+.sc-stat-val{font-size:1.05rem;font-weight:800;color:var(--g800)}
+.sc-stat-val.ruby{color:var(--ruby)}
+.sc-stat-val.gold{color:var(--gold-dk)}
+.sc-stat-val.green{color:var(--green)}
+
+/* ── ADJUSTER ── */
+.adjuster{background:var(--white);border:1.5px solid var(--gold-bdr);border-radius:var(--r-sm);padding:14px 17px;margin-top:12px}
+.adjuster-label{font-size:.71rem;font-weight:700;color:var(--g600);margin-bottom:5px;display:block}
+.slider-wrap{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.slider-wrap input[type=range]{flex:1;height:4px;border-radius:2px;accent-color:var(--gold);border:none;background:transparent}
+.slider-val{font-size:1rem;font-weight:800;color:var(--gold-dk);white-space:nowrap;min-width:88px;text-align:right}
+.adjuster-result{font-size:.76rem;color:var(--g600);margin-top:5px}
+
+/* ── PROJECTION TABLE ── */
+.proj-toggle{display:flex;align-items:center;gap:7px;background:none;border:none;font-family:var(--font);font-size:.73rem;font-weight:700;color:var(--g400);cursor:pointer;padding:8px 0 3px;width:100%}
+.proj-toggle:hover{color:var(--g800)}
+.proj-toggle svg{transition:transform .2s;flex-shrink:0}
+.proj-toggle.open svg{transform:rotate(180deg)}
+.proj-body{display:none;overflow-x:auto;border-radius:var(--r-sm);border:1px solid #eeecea;margin-top:6px}
+.proj-body.open{display:block}
+table{width:100%;border-collapse:collapse;font-size:.76rem}
+thead th{background:var(--g50);padding:7px 9px;text-align:right;font-weight:700;font-size:.63rem;text-transform:uppercase;letter-spacing:.05em;color:var(--g400);border-bottom:1px solid var(--g200);white-space:nowrap}
+thead th:first-child{text-align:center;width:40px}
+tbody tr{border-bottom:1px solid #f3f2f0}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--g50)}
+tbody td{padding:6px 9px;text-align:right;color:var(--g800)}
+tbody td:first-child{text-align:center;font-weight:700;color:var(--g400);font-size:.70rem}
+tr.depleted td{color:var(--ruby);background:var(--ruby-bg)}
+tfoot td{padding:7px 9px;text-align:right;font-weight:700;background:var(--g50);border-top:2px solid var(--g200);font-size:.72rem}
+tfoot td:first-child{text-align:center}
+
+/* ── ESTATE PLANNING ── */
+.estate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.estate-card{border-radius:var(--r-sm);padding:15px 17px;border:1px solid transparent}
+.estate-card.navy{background:var(--navy-bg);border-color:var(--navy-bdr)}
+.estate-card.ruby{background:var(--ruby-bg);border-color:var(--ruby-bdr)}
+.estate-card.gold{background:var(--gold-bg);border-color:var(--gold-bdr)}
+.estate-card.green{background:var(--green-bg);border-color:var(--green-bdr)}
+.estate-card.muted{background:var(--g50);border-color:var(--g200)}
+.estate-card-full{grid-column:1/-1}
+.ec-label{font-size:.64rem;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--g400);margin-bottom:3px}
+.ec-val{font-size:1.35rem;font-weight:800;font-variant-numeric:tabular-nums}
+.estate-card.navy  .ec-val{color:var(--navy)}
+.estate-card.ruby  .ec-val{color:var(--ruby)}
+.estate-card.gold  .ec-val{color:var(--gold-dk)}
+.estate-card.green .ec-val{color:var(--green)}
+.estate-card.muted .ec-val{color:var(--g800)}
+.ec-sub{font-size:.67rem;color:var(--g400);margin-top:3px;line-height:1.4}
+
+/* ── HEIRS TABLE ── */
+.heirs-table{width:100%;border-collapse:collapse;font-size:.78rem;margin-top:4px}
+.heirs-table th{background:var(--navy-bg);padding:7px 10px;text-align:left;font-weight:700;font-size:.64rem;text-transform:uppercase;letter-spacing:.05em;color:var(--navy);border-bottom:1px solid var(--navy-bdr)}
+.heirs-table th:last-child,.heirs-table td:last-child{text-align:right}
+.heirs-table td{padding:7px 10px;border-bottom:1px solid #f0eeeb;color:var(--g800)}
+.heirs-table tr:last-child td{border-bottom:none}
+.heirs-table tr:hover td{background:var(--g50)}
+.heirs-table .total-row td{font-weight:700;background:var(--g50);border-top:2px solid var(--g200)}
+.heirs-table .free-row td{font-weight:700;color:var(--gold-dk);background:var(--gold-bg)}
+
+/* ── DEDUCTION BOX ── */
+.deduction-list{font-size:.76rem;color:var(--g600);background:var(--g50);border-radius:var(--r-sm);padding:12px 14px}
+.deduction-list .d-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid #eeecea}
+.deduction-list .d-row:last-child{border-bottom:none}
+.deduction-list .d-row.total{font-weight:700;color:var(--g800);border-top:2px solid var(--g200);margin-top:3px;padding-top:5px}
+.deduction-list .d-label{color:var(--g600)}
+.deduction-list .d-val{font-weight:600;color:var(--g800);font-variant-numeric:tabular-nums}
+
+/* ── CHARTS ── */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-box{background:var(--white);border:1px solid #eeecea;border-radius:var(--r-sm);padding:14px 14px 9px}
+.chart-title{font-size:.67rem;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--g400);margin-bottom:11px}
+canvas{display:block;max-width:100%}
+.chart-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:7px}
+.cl-item{display:flex;align-items:center;gap:5px;font-size:.67rem;color:var(--g600)}
+.cl-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+/* ── EMPTY STATE ── */
+.empty-state{text-align:center;padding:44px 24px;color:var(--g400)}
+.empty-icon{font-size:2.2rem;margin-bottom:10px;opacity:.5}
+.empty-state p{font-size:.83rem;line-height:1.6;max-width:320px;margin:0 auto}
+
+/* ── FOOTER ── */
+footer{text-align:center;padding:18px;color:var(--g400);font-size:.69rem;border-top:1px solid var(--g200);background:var(--white);margin-top:40px}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── PRINT ── */
+#pdfReport{display:none}
+@media print{
+  body>*:not(#pdfReport){display:none!important}
+  #pdfReport{display:block!important;font-family:Arial,sans-serif;font-size:10.5pt;color:#1a1a1a}
+  .pdf-cover{background:#9B1B2A;color:#fff;padding:36pt 32pt;page-break-after:avoid}
+  .pdf-cover h1{font-size:20pt;font-weight:700;color:#fff;margin-bottom:5pt}
+  .pdf-cover .sub{font-size:8.5pt;color:rgba(255,255,255,.75);margin-top:4pt}
+  .pdf-cover .gold{color:#C9A84C;font-size:8.5pt;font-weight:700;margin-bottom:8pt;display:block;text-transform:uppercase;letter-spacing:.07em}
+  .pdf-sec{padding:14pt 32pt;border-bottom:.5pt solid #eee;page-break-inside:avoid}
+  .pdf-sec-title{font-size:8.5pt;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-bottom:9pt;padding-bottom:3pt;border-bottom:1.5pt solid #9B1B2A;color:#9B1B2A}
+  .pdf-sec-title.navy{border-bottom-color:#1a2e4a;color:#1a2e4a}
+  .pdf-verdict{padding:10pt 12pt;margin-bottom:10pt;border-radius:3pt;border-left:3pt solid #9B1B2A;background:#fdf4f5}
+  .pdf-verdict.ok{border-left-color:#1a6e42;background:#eef8f3}
+  .pdf-verdict.estate{border-left-color:#1a2e4a;background:#f0f4f9}
+  .pdf-verdict h3{font-size:10pt;font-weight:700;margin-bottom:2pt}
+  .pdf-verdict p{font-size:8pt;color:#555}
+  .pdf-2col{display:grid;grid-template-columns:1fr 1fr;gap:16pt}
+  .pdf-stat{margin-bottom:6pt}
+  .pdf-stat-label{font-size:7pt;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:1pt}
+  .pdf-stat-val{font-size:11pt;font-weight:700}
+  .pdf-stat-val.ruby{color:#9B1B2A}
+  .pdf-stat-val.gold{color:#a07c28}
+  .pdf-stat-val.green{color:#1a6e42}
+  .pdf-stat-val.navy{color:#1a2e4a}
+  .pdf-row{display:flex;justify-content:space-between;padding:3pt 0;border-bottom:.5pt solid #f2f2f2}
+  .pdf-row-lbl{font-size:8pt;color:#555}
+  .pdf-row-val{font-size:8.5pt;font-weight:700}
+  .pdf-sc-box{border:.5pt solid #eee;border-radius:3pt;padding:9pt 11pt;margin-bottom:7pt}
+  .pdf-sc-box h3{font-size:9pt;font-weight:700;margin-bottom:3pt}
+  .pdf-sc-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:7pt;margin-top:5pt}
+  .pdf-ht{width:100%;border-collapse:collapse;font-size:7.5pt;margin-top:7pt}
+  .pdf-ht th{background:#f0f4f9;padding:4pt 6pt;text-align:left;font-weight:700;font-size:6.5pt;text-transform:uppercase;color:#1a2e4a;border-bottom:.5pt solid #b8cde0}
+  .pdf-ht th:last-child,.pdf-ht td:last-child{text-align:right}
+  .pdf-ht td{padding:3.5pt 6pt;border-bottom:.3pt solid #f0f0f0}
+  .pdf-ht .total-row td{font-weight:700;background:#f4f3f1;border-top:1pt solid #ddd}
+  .pdf-ht .free-row td{font-weight:700;color:#a07c28;background:#fdf8ed}
+  .pdf-footer{padding:10pt 32pt;font-size:6.5pt;color:#888;border-top:.5pt solid #ddd}
+  @page{margin:.45in;size:A4 portrait}
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:820px){
+  .two-col{grid-template-columns:1fr}
+  .col-left{position:static}
+  .hero{padding:28px 16px 24px}
+  .hero h1{font-size:1.65rem}
+  .wrap{padding:0 12px 60px}
+  .result-grid,.estate-grid{grid-template-columns:1fr 1fr}
+  .chart-grid{grid-template-columns:1fr}
+  .hero-inner{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:480px){
+  .result-grid,.estate-grid{grid-template-columns:1fr}
+  .hero-actions{flex-direction:column}
+  .field-row-2{grid-template-columns:1fr}
+  .tabs{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span class="hero-badge-dot"></span>BPI Wealth · Personal Wealth Advisory</div>
+      <h1>Navigate<br><em>Wealth Planning Calculator</em></h1>
+      <p>Plan your retirement lifestyle and understand your estate — all in one place.</p>
+    </div>
+    <div class="hero-actions">
+      <button class="btn btn-gold" onclick="downloadPDF()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 15V3m0 12-4-4m4 4 4-4M2 17l.621 2.485A2 2 0 0 0 4.561 21h14.878a2 2 0 0 0 1.94-1.515L22 17"/></svg>
+        Download Results as PDF
+      </button>
+      <button class="btn btn-ghost" onclick="resetForm()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/></svg>
+        Reset
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="two-col">
+
+<!-- ═══ LEFT: INPUTS ═══ -->
+<div class="col-left">
+
+  <!-- Personal -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-icon">👤</div><h3>Personal Details</h3></div>
+    <div class="card-bd">
+      <div class="field-row-2">
+        <div class="field"><label class="lbl">Age</label><input type="number" id="age" min="20" max="100" placeholder="e.g. 60"></div>
+        <div class="field"><label class="lbl">Gender</label>
+          <select id="gender"><option value="">Select</option><option value="F">Female</option><option value="M">Male</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Monthly Cash Flow -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-icon">💵</div><h3>Monthly Cash Flow</h3></div>
+    <div class="card-bd">
+      <div class="field">
+        <label class="lbl">Monthly Retirement Income</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="monthlyIncome" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. pension, rental income</div>
+      </div>
+      <div class="field">
+        <label class="lbl">Monthly Expense Upon Retirement</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="monthlyExpense" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assets -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-icon">🏦</div><h3>Assets &amp; Liabilities (PHP)</h3></div>
+    <div class="card-bd">
+      <span class="sep-label" style="margin-top:0;border-top:none;padding-top:0">Financial Assets</span>
+      <div class="field">
+        <label class="lbl">Cash Available for Investment</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="cashAvailable" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. estimated retirement pay, liquid funds</div>
+      </div>
+      <div class="field">
+        <label class="lbl">Current Investments</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="currentInvestment" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. cash deposits, UITFs, bonds, equities, insurance cash value, retirement funds</div>
+      </div>
+      <div class="field">
+        <label class="lbl">Estimated Return p.a.</label>
+        <div class="fi"><input type="number" id="returnPA" class="pr" placeholder="0" min="0" max="30" step="0.1"><span class="suf">%</span></div>
+      </div>
+      <span class="sep-label">Non-Financial Assets</span>
+      <div class="field">
+        <label class="lbl">Non-Financial Assets (Total Value)</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="nonFinancialAssets" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. real property, vehicles, business interests, personal property (jewelry, collectibles)</div>
+      </div>
+      <span class="sep-label">Obligations</span>
+      <div class="field">
+        <label class="lbl">Liabilities</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="liabilities" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. outstanding loans, mortgages, payables</div>
+      </div>
+      <div class="field">
+        <label class="lbl">Special Allotment</label>
+        <div class="fi"><span class="pre">₱</span><input type="text" id="specialAllotment" class="pl num-input" placeholder="0" inputmode="numeric"></div>
+        <div class="hint">e.g. gifting, big purchase, planned project</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Assumptions -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-icon">⚙️</div><h3>Retirement Assumptions</h3></div>
+    <div class="card-bd">
+      <div class="field-row-2">
+        <div class="field">
+          <label class="lbl">Retirement Period</label>
+          <div class="fi"><input type="number" id="retirementPeriod" class="pr" value="20" min="1" max="50"><span class="suf" style="font-size:.62rem">yrs</span></div>
+        </div>
+        <div class="field">
+          <label class="lbl">Net Return p.a.</label>
+          <div class="fi"><input type="number" id="netReturnPA" class="pr" value="4" min="0" max="30" step="0.1"><span class="suf">%</span></div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="lbl">Annual Inflation</label>
+        <div class="fi"><input type="number" id="inflation" class="pr" value="3" min="0" max="20" step="0.1"><span class="suf">%</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Heirs (Estate Planning) -->
+  <div class="card">
+    <div class="card-hd"><div class="card-hd-icon">⚖️</div><h3>Surviving Heirs</h3></div>
+    <div class="card-bd">
+      <div class="field">
+        <label class="lbl">Legitimate Children</label>
+        <input type="number" id="legitChildren" min="0" max="20" placeholder="0" value="0">
+      </div>
+      <div class="field">
+        <label class="lbl">Surviving Spouse?</label>
+        <select id="survivingSpouse"><option value="Yes">Yes</option><option value="No">No</option></select>
+      </div>
+      <div class="field">
+        <label class="lbl">Illegitimate Children</label>
+        <input type="number" id="illegitChildren" min="0" max="20" placeholder="0" value="0">
+      </div>
+      <div class="field-row-2">
+        <div class="field">
+          <label class="lbl">Legitimate Parents Surviving?</label>
+          <select id="legitParents"><option value="No">No</option><option value="Yes">Yes</option></select>
+        </div>
+        <div class="field">
+          <label class="lbl">Illegitimate Parents Surviving?</label>
+          <select id="illegitParents"><option value="No">No</option><option value="Yes">Yes</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /col-left -->
+
+<!-- ═══ RIGHT: RESULTS ═══ -->
+<div id="colRight">
+
+  <!-- Empty state -->
+  <div id="emptyState" class="empty-state" style="margin-top:28px">
+    <div class="empty-icon">📋</div>
+    <p>Fill in your details on the left to see your personalized wealth planning analysis.</p>
+    <p id="missingMsg" style="margin-top:8px;font-size:.73rem;color:var(--ruby)"></p>
+  </div>
+
+  <!-- Results area -->
+  <div id="resultsArea" style="display:none">
+
+    <!-- RESULT TABS -->
+    <div class="result-tabs">
+      <button class="rtab-btn active" onclick="switchRTab(0,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Retirement Planning
+      </button>
+      <button class="rtab-btn" onclick="switchRTab(1,this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        Estate Planning
+      </button>
+    </div>
+
+    <!-- ══ RETIREMENT TAB ══ -->
+    <div class="rtab-panel active" id="rtab0">
+
+      <div id="verdictBox" class="verdict gap">
+        <div class="verdict-lbl" id="verdictLabel"></div>
+        <div class="verdict-hdg" id="verdictHeading"></div>
+        <div class="verdict-sub" id="verdictSub"></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-hd"><h2>Key Numbers at a Glance</h2></div>
+        <div class="result-grid" id="resultGrid"></div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-hd"><h2>Visual Overview</h2><p>Based on current inputs</p></div>
+        <div class="chart-grid">
+          <div class="chart-box">
+            <div class="chart-title">Fund Balance Over Time</div>
+            <canvas id="chartBalance" height="170"></canvas>
+            <div class="chart-legend">
+              <div class="cl-item"><div class="cl-dot" style="background:var(--ruby)"></div>Live Comfortably</div>
+              <div class="cl-item"><div class="cl-dot" style="background:var(--gold)"></div>Live Safe</div>
+              <div class="cl-item"><div class="cl-dot" style="background:#5a9e80"></div>Live Within Means</div>
+            </div>
+          </div>
+          <div class="chart-box">
+            <div class="chart-title">Years Fund May Last</div>
+            <canvas id="chartYears" height="170"></canvas>
+            <div class="chart-legend" id="yearsLegend"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sc">
+        <div class="sc-hd"><h2>Your Retirement Options</h2><p>Three paths forward</p></div>
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab(0,this)">🏠 Live Comfortably</button>
+          <button class="tab-btn"        onclick="switchTab(1,this)">🛡 Live Safe</button>
+          <button class="tab-btn"        onclick="switchTab(2,this)">📊 Live Within Means</button>
+        </div>
+
+        <div class="tab-panel active" id="tab0">
+          <div class="sc-intro ruby">
+            <div class="sc-tag">Option 1 · Live Comfortably</div>
+            <div class="sc-title">Keep your desired lifestyle for the full retirement period.</div>
+            <div class="sc-desc" id="sc1Desc"></div>
+            <div class="sc-stats" id="sc1Stats"></div>
+          </div>
+          <button class="proj-toggle" id="ptog0" onclick="toggleProj(0)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            Show year-by-year projection
+          </button>
+          <div class="proj-body" id="proj0">
+            <table><thead><tr><th>Yr</th><th>Annual Cost</th><th>Beg. Fund</th><th>Est. Gains</th><th>Principal Used</th><th>End Fund</th></tr></thead>
+            <tbody id="tb1"></tbody><tfoot id="tf1"></tfoot></table>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab1">
+          <div class="sc-intro gold">
+            <div class="sc-tag">Option 2 · Live Safe</div>
+            <div class="sc-title">Adjust your monthly budget so your fund lasts the full retirement period.</div>
+            <div class="sc-desc" id="sc2Desc"></div>
+            <div class="sc-stats" id="sc2Stats"></div>
+          </div>
+          <div class="adjuster" id="adjusterBox">
+            <span class="adjuster-label">Adjust your monthly spending target:</span>
+            <div class="slider-wrap">
+              <input type="range" id="spendingSlider" min="0" max="200000" step="1000" value="0">
+              <span class="slider-val" id="sliderVal">₱0</span>
+            </div>
+            <div class="adjuster-result" id="adjResult">Move the slider to explore different spending levels.</div>
+          </div>
+          <button class="proj-toggle" id="ptog1" onclick="toggleProj(1)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            Show year-by-year projection
+          </button>
+          <div class="proj-body" id="proj1">
+            <table><thead><tr><th>Yr</th><th>Annual Cost</th><th>Beg. Fund</th><th>Est. Gains</th><th>Principal Used</th><th>End Fund</th></tr></thead>
+            <tbody id="tb2"></tbody><tfoot id="tf2"></tfoot></table>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab2">
+          <div class="sc-intro muted">
+            <div class="sc-tag">Option 3 · Live Within Means</div>
+            <div class="sc-title">Keep your desired lifestyle and see how long your fund will actually last.</div>
+            <div class="sc-desc" id="sc3Desc"></div>
+            <div class="sc-stats" id="sc3Stats"></div>
+          </div>
+          <button class="proj-toggle" id="ptog2" onclick="toggleProj(2)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+            Show year-by-year projection
+          </button>
+          <div class="proj-body" id="proj2">
+            <table><thead><tr><th>Yr</th><th>Annual Cost</th><th>Beg. Fund</th><th>Est. Gains</th><th>Principal Used</th><th>End Fund</th></tr></thead>
+            <tbody id="tb3"></tbody><tfoot id="tf3"></tfoot></table>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /rtab0 retirement -->
+
+    <!-- ══ ESTATE TAB ══ -->
+    <div class="rtab-panel" id="rtab1">
+
+      <div class="verdict estate">
+        <div class="verdict-lbl">⚖️ Estate Planning Summary</div>
+        <div class="verdict-hdg" id="estateHeading"></div>
+        <div class="verdict-sub" id="estateSub"></div>
+      </div>
+
+      <!-- Gross Estate -->
+      <div class="sc">
+        <div class="sc-hd"><h2>Gross Estate &amp; Net Taxable Estate</h2><p>Per TRAIN Law (RA 10963)</p></div>
+        <div class="estate-grid">
+          <div class="estate-card navy">
+            <div class="ec-label">Total Financial Assets</div>
+            <div class="ec-val" id="eTotalFinancial"></div>
+            <div class="ec-sub">Cash available + current investments</div>
+          </div>
+          <div class="estate-card muted">
+            <div class="ec-label">Non-Financial Assets</div>
+            <div class="ec-val" id="eNonFinancial"></div>
+            <div class="ec-sub">Real property, vehicles, business, personal property</div>
+          </div>
+          <div class="estate-card navy estate-card-full">
+            <div class="ec-label">Gross Estate</div>
+            <div class="ec-val" id="eGrossEstate"></div>
+            <div class="ec-sub">Total financial + non-financial assets</div>
+          </div>
+        </div>
+
+        <!-- Deductions -->
+        <div style="margin-bottom:14px">
+          <div style="font-size:.72rem;font-weight:700;color:var(--g600);margin-bottom:7px;text-transform:uppercase;letter-spacing:.06em">Allowable Deductions (TRAIN Law)</div>
+          <div class="deduction-list" id="deductionList"></div>
+        </div>
+
+        <div class="estate-grid">
+          <div class="estate-card ruby">
+            <div class="ec-label">Net Taxable Estate</div>
+            <div class="ec-val" id="eNetEstate"></div>
+            <div class="ec-sub">Gross estate less all allowable deductions</div>
+          </div>
+          <div class="estate-card ruby">
+            <div class="ec-label">Estate Tax (6%)</div>
+            <div class="ec-val" id="eEstateTax"></div>
+            <div class="ec-sub">Flat 6% of net taxable estate per TRAIN Law</div>
+          </div>
+          <div class="estate-card green estate-card-full">
+            <div class="ec-label">Net Estate After Tax</div>
+            <div class="ec-val" id="eNetAfterTax"></div>
+            <div class="ec-sub">Available for distribution to heirs</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distribution -->
+      <div class="sc">
+        <div class="sc-hd"><h2>Estate Distribution</h2><p>Based on surviving heirs per Civil Code of the Philippines</p></div>
+
+        <div class="estate-grid" style="margin-bottom:14px">
+          <div class="estate-card gold">
+            <div class="ec-label">Total Legitime</div>
+            <div class="ec-val" id="eTotalLegit"></div>
+            <div class="ec-sub" id="eLegitPct"></div>
+          </div>
+          <div class="estate-card gold">
+            <div class="ec-label">Free Portion</div>
+            <div class="ec-val" id="eFreePortion"></div>
+            <div class="ec-sub" id="eFreePct"></div>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;border-radius:var(--r-sm);border:1px solid var(--navy-bdr)">
+          <table class="heirs-table" id="heirsTable">
+            <thead>
+              <tr>
+                <th>Heir</th>
+                <th>Count</th>
+                <th>Legitime Amount</th>
+                <th>% of Net Estate</th>
+                <th>Per Heir</th>
+              </tr>
+            </thead>
+            <tbody id="heirsTbody"></tbody>
+          </table>
+        </div>
+
+        <!-- Estate chart -->
+        <div class="chart-box" style="margin-top:14px">
+          <div class="chart-title">Estate Distribution Breakdown</div>
+          <canvas id="chartEstate" height="160"></canvas>
+        </div>
+      </div>
+
+    </div><!-- /rtab1 estate -->
+
+  </div><!-- /resultsArea -->
+</div><!-- /col-right -->
+</div><!-- /two-col -->
+</div><!-- /wrap -->
+
+<footer>
+  <strong>Navigate Wealth Planning Calculator</strong> · BPI Wealth Management &nbsp;·&nbsp;
+  For illustration purposes only. Not financial or legal advice. Estate figures based on TRAIN Law (RA 10963) and Civil Code of the Philippines.
+</footer>
+
+<div id="pdfReport"></div>
+
+<script>
+"use strict";
+/*
+ * ══════════════════════════════════════════════════════════════
+ * NAVIGATE WEALTH PLANNING CALCULATOR v3
+ *
+ * RETIREMENT FORMULAS (from Navigate Calc v3.xlsx):
+ *  annualIncome       = monthlyIncome × 12
+ *  annualExpense      = monthlyExpense × 12
+ *  incomeFromInvest   = currentInvestment × returnPA
+ *  estAnnualInflow    = annualIncome + incomeFromInvest
+ *  annualGap          = annualExpense − estAnnualInflow
+ *  netCash            = cashAvailable − liabilities − specialAllotment
+ *  totalFundRequired  = pvGA(gap, inf, r, n) × (1+r)   [annuity-due, Excel-verified]
+ *  sustainableExpense = netCash / pvGA(1, inf, r, n) + estAnnualInflow
+ *
+ * ESTATE FORMULAS (from BPI WPFO Legitime Calculator + TRAIN Law):
+ *  grossEstate        = cashAvailable + currentInvestment + nonFinancialAssets
+ *  deductions         = standardDeduction(5M) + familyHomeDeduction(min(familyHome,10M))
+ *                     + liabilities + funeralExpenses(min(5% grossEstate, 200K))
+ *  netTaxableEstate   = grossEstate − totalDeductions
+ *  estateTax          = netTaxableEstate × 6%
+ *  netAfterTax        = netTaxableEstate − estateTax
+ *
+ * LEGITIME (Civil Code of Philippines, Excel-verified):
+ *  Legitimate Children (Total)  = if legitChildren>0: netAfterTax × 0.5 else 0
+ *  Per Legitimate Child         = Total / legitChildren
+ *  Surviving Spouse             = complex formula (see pvGA section)
+ *  Illegitimate Children (Total)= if illegitChildren>0: if legitChildren>0:
+ *                                   min(illegitChildren × perLegitChild × 0.5, netAfterTax − legitTotal − spouseShare)
+ *                                 else if spouse: netAfterTax × 0.25 else netAfterTax × 0.5
+ *  Legitimate Parents           = if legitChildren=0 and legitParents=Yes: netAfterTax × 0.5 else 0
+ *  Illegitimate Parents         = if legitChildren=0 and illegitChildren=0 and spouse=No and illegitParents=Yes:
+ *                                   if spouse=Yes: netAfterTax × 0.25 else netAfterTax × 0.5
+ * ══════════════════════════════════════════════════════════════
+ */
+
+/* ── UTILS ── */
+const fmt  = (n, d=0) => { if(n===null||n===undefined||isNaN(n))return'—'; const s=Math.abs(n).toLocaleString('en-PH',{minimumFractionDigits:d,maximumFractionDigits:d}); return n<0?`(${s})`:s; };
+const fP   = (n, d=0) => isNaN(n)||n===null?'—':'₱'+fmt(n,d);
+const fPct = (n, d=1) => isNaN(n)||n===null?'—':(n*100).toFixed(d)+'%';
+const gv   = id => { const el=document.getElementById(id); if(!el)return 0; return parseFloat(String(el.value).replace(/,/g,''))||0; };
+const gvS  = id => document.getElementById(id)?.value||'';
+const hasVal = id => { const el=document.getElementById(id); const v=el?.value; if(!v)return false; return !isNaN(parseFloat(String(v).replace(/,/g,''))); };
+
+/* ── COMMA FORMATTING ── */
+const CURRENCY_IDS=['monthlyIncome','monthlyExpense','cashAvailable','currentInvestment','nonFinancialAssets','liabilities','specialAllotment'];
+function handleCurrencyInput(el){
+  const pos=el.selectionStart; const old=el.value; const oldLen=old.length;
+  const raw=old.replace(/,/g,'').replace(/[^\d.]/g,'');
+  const clean=raw.replace(/^(\d*\.?\d*).*$/,'$1');
+  const parts=clean.split('.'); parts[0]=parts[0].replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  const formatted=parts.join('.');
+  if(el.value!==formatted){el.value=formatted;const diff=formatted.length-oldLen;el.setSelectionRange(pos+diff,pos+diff);}
+}
+
+/* ── GROWING ANNUITY PV (annuity-immediate) ── */
+function pvGA(pmt,g,r,n){
+  if(n<=0||r<=0)return 0;
+  if(Math.abs(r-g)<1e-10)return pmt*n/(1+r);
+  return pmt*(1-Math.pow((1+g)/(1+r),n))/(r-g);
+}
+
+/* ── RETIREMENT COMPUTE ── */
+function computeRetirement(){
+  const monthlyIncome  = gv('monthlyIncome');
+  const monthlyExpense = gv('monthlyExpense');
+  const cashAvail      = gv('cashAvailable');
+  const currentInvest  = gv('currentInvestment');
+  const returnPA       = gv('returnPA')/100;
+  const liabilities    = gv('liabilities');
+  const specialAllot   = gv('specialAllotment');
+  const period         = Math.max(1,Math.round(gv('retirementPeriod')||20));
+  const r              = gv('netReturnPA')/100;
+  const inf            = gv('inflation')/100;
+
+  const annualIncome     = monthlyIncome*12;
+  const annualExpense    = monthlyExpense*12;
+  const incomeFromInvest = currentInvest*returnPA;
+  const estAnnualInflow  = annualIncome+incomeFromInvest;
+  const annualGap        = annualExpense-estAnnualInflow;
+  const netCash          = cashAvail-liabilities-specialAllot;
+
+  // Total fund required (annuity-due)
+  const totalFundRequired = annualGap>0 ? pvGA(annualGap,inf,r,period)*(1+r) : 0;
+  const additionalNeeded  = Math.max(0,totalFundRequired-currentInvest);
+  const cashShortfall     = totalFundRequired-netCash;
+
+  // Option 2: sustainable expense
+  const pvFactor         = pvGA(1,inf,r,period);
+  const sustainableGap   = pvFactor>0 ? netCash/pvFactor : 0;
+  const sustainableExpense=sustainableGap+estAnnualInflow;
+
+  // Option 3: years fund lasts
+  let yearsFundLasts=0;
+  if(annualGap>0&&netCash>0){
+    let f=netCash;
+    for(let y=1;y<=100;y++){const w=annualGap*Math.pow(1+inf,y-1);f=f*(1+r)-w;if(f<=0){yearsFundLasts=y-1;break;}yearsFundLasts=y;}
+  } else { yearsFundLasts=period; }
+
+  // Projection builders
+  function buildT1(){
+    const rows=[];let fl=totalFundRequired,tc=0,tg=0,tp=0;
+    for(let y=1;y<=period;y++){
+      const cost=annualGap*Math.pow(1+inf,y-1);
+      let begFund,gains,principalUsed,endFund;
+      if(y===1){begFund=fl;gains=0;principalUsed=cost;endFund=fl-cost;}
+      else{begFund=fl*(1+r);gains=fl*r;endFund=begFund-cost;principalUsed=Math.max(0,cost-gains);}
+      rows.push({y,cost,begFund,gains,principalUsed,endFund});fl=endFund;
+      tc+=cost;tg+=gains;tp+=principalUsed;
+    }
+    return{rows,tc,tg,tp};
+  }
+  function buildT2(spendOverride){
+    const chosenExp=spendOverride??sustainableExpense;
+    const chosenGap=Math.max(0,chosenExp-estAnnualInflow);
+    const rows=[];let f=netCash,tc=0,tg=0,tp=0;
+    for(let y=1;y<=period;y++){
+      const w=chosenGap*Math.pow(1+inf,y-1);
+      const rc=chosenExp*Math.pow(1+inf,y-1);
+      const beg=f,gains=beg*r,end=beg+gains-w,pu=Math.max(0,w-gains);
+      rows.push({y,cost:rc,begFund:beg,gains,principalUsed:pu,endFund:Math.max(0,end)});
+      f=Math.max(0,end);tc+=w;tg+=gains;tp+=pu;
+    }
+    return{rows,tc,tg,tp,chosenExp};
+  }
+  function buildT3(){
+    const rows=[];let f=netCash,tc=0,tg=0,tp=0;
+    const maxY=Math.min(Math.max(yearsFundLasts+3,period),50);
+    for(let y=1;y<=maxY;y++){
+      const w=annualGap>0?annualGap*Math.pow(1+inf,y-1):0;
+      const rc=annualExpense*Math.pow(1+inf,y-1);
+      const beg=f,gains=beg>0?beg*r:0,end=beg+gains-w,pu=Math.max(0,w-gains);
+      rows.push({y,cost:rc,begFund:beg,gains,principalUsed:pu,endFund:end,depleted:end<=0});
+      f=end;tc+=w;tg+=gains;tp+=pu;
+    }
+    return{rows,tc,tg,tp};
+  }
+
+  return {
+    monthlyIncome,monthlyExpense,cashAvail,currentInvest,returnPA,liabilities,specialAllot,
+    period,r,inf,annualIncome,annualExpense,incomeFromInvest,estAnnualInflow,
+    annualGap,netCash,totalFundRequired,additionalNeeded,cashShortfall,
+    sustainableExpense,sustainableGap,pvFactor,yearsFundLasts,
+    t1:buildT1(),t2:buildT2(),t3:buildT3(),buildT2
+  };
+}
+
+/* ── ESTATE COMPUTE ── */
+function computeEstate(){
+  const cashAvail        = gv('cashAvailable');
+  const currentInvest    = gv('currentInvestment');
+  const nonFinancial     = gv('nonFinancialAssets');
+  const liabilities      = gv('liabilities');
+  const legitChildrenN   = Math.max(0,Math.round(gv('legitChildren')));
+  const illegitChildrenN = Math.max(0,Math.round(gv('illegitChildren')));
+  const survivingSpouse  = gvS('survivingSpouse');
+  const legitParents     = gvS('legitParents');
+  const illegitParents   = gvS('illegitParents');
+
+  /* Gross estate = all assets */
+  const totalFinancial = cashAvail + currentInvest;
+  const grossEstate    = totalFinancial + nonFinancial;
+
+  /* TRAIN Law Deductions (RA 10963)
+   * 1. Standard Deduction: ₱5,000,000
+   * 2. Family Home: up to ₱10,000,000
+   *    (approximated as min(nonFinancialAssets, 10,000,000) — user's property)
+   * 3. Funeral & Judicial Expenses: min(5% of gross estate, ₱200,000)
+   * 4. Claims against estate (liabilities / unpaid mortgages)
+   * 5. Medical expenses within 1 yr: capped at ₱500,000 (set to 0 — not collected)
+   */
+  const stdDeduction     = 5_000_000;
+  const familyHomeDeduct = Math.min(nonFinancial, 10_000_000);
+  const funeralExpenses  = Math.min(grossEstate*0.05, 200_000);
+  const totalDeductions  = stdDeduction + familyHomeDeduct + funeralExpenses + liabilities;
+  const netTaxableEstate = Math.max(0, grossEstate - totalDeductions);
+
+  /* Estate Tax: flat 6% per TRAIN Law */
+  const estateTax  = netTaxableEstate * 0.06;
+  const netAfterTax= netTaxableEstate - estateTax;   // distributed to heirs
+
+  /* ── LEGITIME (Civil Code, mirrored from Excel formulas) ──
+   * B3 = netAfterTax, B6 = legitChildrenN, B7 = survivingSpouse,
+   * B8 = illegitChildrenN, B9 = legitParents, B10 = illegitParents
+   */
+  const B3=netAfterTax, B6=legitChildrenN, B7=survivingSpouse,
+        B8=illegitChildrenN, B9=legitParents, B10=illegitParents;
+
+  // Legitimate Children (Total) = if B6>0: B3×0.5 else 0
+  const legitChildTotal = B6>0 ? B3*0.5 : 0;
+  // Per Legitimate Child = if B6>0: legitChildTotal/B6 else 0
+  const perLegitChild   = B6>0 ? legitChildTotal/B6 : 0;
+
+  // Surviving Spouse (Excel formula replicated exactly):
+  // =IF(B7="No",0,IF(B6>0,MIN(perLegitChild,(B3-legitChildTotal)/1),
+  //   IF(B9="Yes",IF(B8>0,B3*1/8,B3*0.25),
+  //     IF(AND(B8=0,B10="Yes"),B3*0.25,
+  //       IF(B8>0,B3*1/3,B3*0.5)))))
+  let spouseShare=0;
+  if(B7==='Yes'){
+    if(B6>0){
+      spouseShare=Math.min(perLegitChild,(B3-legitChildTotal)/1);
+    } else if(B9==='Yes'){
+      spouseShare=B8>0?B3*(1/8):B3*0.25;
+    } else if(B8===0&&B10==='Yes'){
+      spouseShare=B3*0.25;
+    } else if(B8>0){
+      spouseShare=B3*(1/3);
+    } else {
+      spouseShare=B3*0.5;
+    }
+  }
+
+  // Illegitimate Children (Total):
+  // =IF(B8>0,IF(B6>0,MIN(B8*(perLegitChild*0.5),B3-legitChildTotal-spouseShare),
+  //   IF(B9="Yes",B3*0.25,B3*0.5)),0)
+  let illegitChildTotal=0;
+  if(B8>0){
+    if(B6>0){
+      illegitChildTotal=Math.min(B8*(perLegitChild*0.5),B3-legitChildTotal-spouseShare);
+    } else if(B7==='Yes'){
+      illegitChildTotal=B3*0.25;
+    } else {
+      illegitChildTotal=B3*0.5;
+    }
+  }
+  const perIllegitChild = B8>0 ? illegitChildTotal/B8 : 0;
+
+  // Legitimate Parents: if B6=0 and B9=Yes: B3×0.5 else 0
+  const legitParentShare = (B6===0&&B9==='Yes') ? B3*0.5 : 0;
+
+  // Illegitimate Parents: if B6=0 and B8=0 and B7=No and B10=Yes: B7=Yes→B3×0.25 else B3×0.5
+  const illegitParentShare = (B6===0&&B8===0&&B7==='No'&&B10==='Yes')
+    ? (B7==='Yes'?B3*0.25:B3*0.5) : 0;
+
+  const totalLegitme = legitChildTotal+spouseShare+illegitChildTotal+legitParentShare+illegitParentShare;
+  const freePortion  = B3 - totalLegitme;
+
+  return {
+    cashAvail,currentInvest,nonFinancial,liabilities,
+    legitChildrenN,illegitChildrenN,survivingSpouse,legitParents,illegitParents,
+    totalFinancial,grossEstate,
+    stdDeduction,familyHomeDeduct,funeralExpenses,totalDeductions,
+    netTaxableEstate,estateTax,netAfterTax,
+    legitChildTotal,perLegitChild,spouseShare,
+    illegitChildTotal,perIllegitChild,
+    legitParentShare,illegitParentShare,
+    totalLegitme,freePortion
+  };
+}
+
+/* ── RENDER ── */
+let lastR=null,lastE=null;
+
+function render(){
+  const requiredFields=['monthlyExpense','retirementPeriod','netReturnPA','inflation'];
+  const fieldLabels={monthlyExpense:'Monthly Expense',retirementPeriod:'Retirement Period',netReturnPA:'Net Return p.a.',inflation:'Annual Inflation'};
+  const missingCritical=requiredFields.filter(id=>!hasVal(id)||gv(id)===0);
+  const hasAssets=hasVal('cashAvailable')||hasVal('currentInvestment');
+
+  const emptyEl=document.getElementById('emptyState');
+  const missingEl=document.getElementById('missingMsg');
+  if(missingCritical.length>0||!hasAssets){
+    const missing=[...missingCritical.map(id=>fieldLabels[id]),
+                   ...(!hasAssets?['Cash Available or Current Investments']:[])];
+    missingEl.textContent=missing.length?'Still needed: '+missing.join(', '):'';
+    emptyEl.style.display='';
+    document.getElementById('resultsArea').style.display='none';
+    return;
+  }
+
+  emptyEl.style.display='none';
+  document.getElementById('resultsArea').style.display='';
+
+  const c=computeRetirement();
+  const e=computeEstate();
+  lastR=c; lastE=e;
+
+  renderRetirement(c);
+  renderEstate(e);
+  renderCharts(c,e);
+  initSlider(c);
+}
+
+/* ── RETIREMENT RENDERS ── */
+function renderRetirement(c){
+  renderVerdict(c);
+  renderKeyNumbers(c);
+  renderScenarios(c);
+}
+
+function renderVerdict(c){
+  const box=document.getElementById('verdictBox');
+  const lbl=document.getElementById('verdictLabel');
+  const hdg=document.getElementById('verdictHeading');
+  const sub=document.getElementById('verdictSub');
+  if(c.annualGap<=0){
+    box.className='verdict ok';
+    lbl.textContent='✅ Your retirement is fully funded';
+    hdg.textContent='Your income and investment returns are more than enough to cover your retirement expenses.';
+    sub.textContent=`Your estimated annual inflow of ${fP(c.estAnnualInflow)} exceeds your annual expense of ${fP(c.annualExpense)} — you have a surplus of ${fP(Math.abs(c.annualGap))}/year. No additional investment is needed.`;
+  } else if(c.cashShortfall>0){
+    box.className='verdict gap';
+    lbl.textContent='⚠️ There is a retirement gap';
+    hdg.textContent=`To live comfortably for ${c.period} years, a total fund of ${fP(c.totalFundRequired)} is needed today.`;
+    sub.textContent=`Your current plan leaves a ${fP(c.cashShortfall)} gap vs. your available net cash. You can increase your investment, reduce monthly spending, or plan for a shorter fund duration. Explore the options below.`;
+  } else {
+    box.className='verdict ok';
+    lbl.textContent='✅ You are on track';
+    hdg.textContent=`Your available funds are sufficient to sustain your desired retirement lifestyle for ${c.period} years.`;
+    sub.textContent=`Your net cash and existing investments cover the full retirement fund target with ${fP(Math.abs(c.cashShortfall))} to spare. No additional investment is required.`;
+  }
+}
+
+function renderKeyNumbers(c){
+  const g=document.getElementById('resultGrid');
+  const gapClass=c.annualGap>0?'ruby':'green';
+  const yearsClass=c.yearsFundLasts>=c.period?'green':'ruby';
+  g.innerHTML=`
+    <div class="rc ruby rc-full">
+      <div class="rc-label">Total Retirement Fund Needed</div>
+      <div class="rc-val">${c.totalFundRequired>0?fP(c.totalFundRequired+c.currentInvest):'Fully funded'}</div>
+      <div class="rc-sub">Total portfolio value required on Day 1 of retirement to sustain ${fP(c.annualExpense)}/year for ${c.period} years (fund required + existing investment)</div>
+    </div>
+    <div class="rc muted">
+      <div class="rc-label">How much you currently have</div>
+      <div class="rc-val">${fP(c.netCash+c.currentInvest)}</div>
+      <div class="rc-sub">Net cash + current investments</div>
+    </div>
+    <div class="rc ${c.totalFundRequired>0?'ruby':'muted'}">
+      <div class="rc-label">How much you need to invest</div>
+      <div class="rc-val">${c.totalFundRequired>0?fP(c.totalFundRequired):'Fully funded'}</div>
+      <div class="rc-sub">Additional fund needed on top of existing investments</div>
+    </div>
+    <div class="rc ${c.annualGap>0?'ruby':'green'}">
+      <div class="rc-label">Your retirement gap</div>
+      <div class="rc-val">${c.annualGap>0?fP(c.annualGap)+'/yr':'No gap'}</div>
+      <div class="rc-sub">${c.annualGap>0?'Desired annual expense '+fP(c.annualExpense)+' less income from retirement '+fP(c.annualIncome)+' and investments '+fP(c.incomeFromInvest):'Your inflows exceed expenses — surplus of '+fP(Math.abs(c.annualGap))+'/year'}</div>
+    </div>
+    <div class="rc ${c.yearsFundLasts>=c.period?'green':'ruby'}">
+      <div class="rc-label">How long your fund may last</div>
+      <div class="rc-val">${c.yearsFundLasts>=c.period?c.period+'+ yrs':c.yearsFundLasts+' yrs'}</div>
+      <div class="rc-sub">${c.yearsFundLasts>=c.period?'Covers the full '+c.period+'-year retirement period':'Short of the '+c.period+'-year target'}</div>
+    </div>
+    <div class="rc gold rc-full">
+      <div class="rc-label">Suggested monthly spending if you want funds to last ${c.period} years</div>
+      <div class="rc-val">${fP(c.sustainableExpense/12)}</div>
+      <div class="rc-sub">Given your income from retirement (${fP(c.annualIncome)}/yr) and existing investment returns (${fP(c.incomeFromInvest)}/yr) and cash available for investment (${fP(c.netCash)}) · ${c.sustainableExpense<c.annualExpense?'Reduction of '+fP((c.annualExpense-c.sustainableExpense)/12)+'/mo from your current plan of '+fP(c.monthlyExpense)+'/mo':'Your current spending is already within the safe range'}</div>
+    </div>`;
+}
+
+function renderScenarios(c){
+  // sc1
+  document.getElementById('sc1Desc').textContent=c.annualGap>0
+    ?`With your existing investment of ${fP(c.currentInvest)}, you will be able to maintain an annual expense of ${fP(c.annualExpense)} (monthly expense × 12). To sustain this for ${c.period} years, a total fund of ${fP(c.totalFundRequired,2)} is required today. Given your net cash available for investment of ${fP(c.netCash)}, you have a shortfall of ${c.cashShortfall>0?fP(c.cashShortfall,2):'₱0'} to invest this year.`
+    :`Your investment returns of ${fP(c.incomeFromInvest)}/year and retirement income of ${fP(c.annualIncome)}/year already exceed your annual expense of ${fP(c.annualExpense)}. You have a surplus of ${fP(Math.abs(c.annualGap))}/year — no additional fund is needed.`;
+  document.getElementById('sc1Stats').innerHTML=`
+    <div><div class="sc-stat-label">Fund Required</div><div class="sc-stat-val ruby">${fP(c.totalFundRequired)}</div></div>
+    <div><div class="sc-stat-label">Shortfall vs. Net Cash</div><div class="sc-stat-val ${c.cashShortfall>0?'ruby':'green'}">${c.cashShortfall>0?fP(c.cashShortfall):'Fully funded'}</div></div>`;
+
+  // sc2
+  const adjMonthly=c.sustainableExpense/12;
+  document.getElementById('sc2Desc').textContent=c.annualGap<=0
+    ?`Your retirement income of ${fP(c.annualIncome)}/year and investment returns of ${fP(c.incomeFromInvest)}/year already cover your expenses in full — you have no funding gap. Your net cash of ${fP(c.netCash)} can support an even higher spending level of up to ${fP(adjMonthly)}/month for the full ${c.period}-year period.`
+    :`Considering your retirement income of ${fP(c.annualIncome)}/year and estimated gains from your existing investment of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow), your net cash of ${fP(c.netCash)} can sustainably support up to ${fP(adjMonthly)}/month (${fP(c.sustainableExpense)}/year at today's value) for the full ${c.period}-year retirement period. Use the slider below to explore different spending levels.`;
+  document.getElementById('sc2Stats').innerHTML=`
+    <div><div class="sc-stat-label">Recommended Monthly Expense</div><div class="sc-stat-val gold">${fP(adjMonthly)}</div></div>
+    <div><div class="sc-stat-label">Annual Expense (today's value)</div><div class="sc-stat-val gold">${fP(c.sustainableExpense)}</div></div>
+    <div><div class="sc-stat-label">Fund Used</div><div class="sc-stat-val">${fP(c.netCash)}</div></div>`;
+
+  // sc3
+  const fd=c.yearsFundLasts;
+  document.getElementById('sc3Desc').textContent=c.annualGap<=0
+    ?`Your investment returns of ${fP(c.incomeFromInvest)}/year and total inflow of ${fP(c.estAnnualInflow)}/year already exceed your annual expense of ${fP(c.annualExpense)}. There is no investment gap — your fund will comfortably last beyond the full ${c.period}-year retirement period.`
+    :fd>=c.period
+      ?`Supplemented by your investment returns of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow including regular income), you will have an investment gap of ${fP(c.annualGap)}/year. Your fund will last the full ${c.period}-year retirement period.`
+      :`Supplemented by your investment returns of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow including regular income), you will have an investment gap of ${fP(c.annualGap)}/year. At your desired spending of ${fP(c.monthlyExpense)}/month, your fund will last about ${fd} years — ${c.period-fd} years short of your target.`;
+  document.getElementById('sc3Stats').innerHTML=`
+    <div><div class="sc-stat-label">Fund Duration</div><div class="sc-stat-val ${fd>=c.period?'green':'ruby'}">${fd>=c.period?c.period+'+ yrs':fd+' yrs'}</div></div>
+    <div><div class="sc-stat-label">Annual Gap</div><div class="sc-stat-val ${c.annualGap>0?'ruby':'green'}">${c.annualGap>0?fP(c.annualGap):'No gap — surplus of '+fP(Math.abs(c.annualGap))}</div></div>
+    <div><div class="sc-stat-label">Net Cash Used</div><div class="sc-stat-val">${fP(c.netCash)}</div></div>`;
+
+  renderTable('tb1','tf1',c.t1.rows,c.t1,false);
+  renderTable('tb2','tf2',c.t2.rows,c.t2,false);
+  renderTable('tb3','tf3',c.t3.rows,c.t3,true);
+}
+
+function renderTable(tbId,tfId,rows,totals,isDepleted){
+  document.getElementById(tbId).innerHTML=rows.map(r=>{
+    const dep=isDepleted&&r.depleted?' class="depleted"':'';
+    return`<tr${dep}><td>${r.y}</td><td>${fP(r.cost)}</td><td>${r.begFund>=0?fP(r.begFund):'<span style="color:var(--ruby)">('+fP(Math.abs(r.begFund))+')</span>'}</td><td style="color:${r.gains>0?'var(--green)':'inherit'}">${fP(r.gains)}</td><td>${fP(r.principalUsed)}</td><td>${r.endFund>=0?fP(r.endFund):'<span style="color:var(--ruby)">('+fP(Math.abs(r.endFund))+')</span>'}</td></tr>`;
+  }).join('');
+  document.getElementById(tfId).innerHTML=`<tr><td>—</td><td>${fP(totals.tc)}</td><td>—</td><td style="color:var(--green)">${fP(totals.tg)}</td><td>${fP(totals.tp)}</td><td>—</td></tr>`;
+}
+
+/* ── ESTATE RENDERS ── */
+function renderEstate(e){
+  // Verdict
+  document.getElementById('estateHeading').textContent=
+    `Gross estate of ${fP(e.grossEstate)} · Net taxable estate of ${fP(e.netTaxableEstate)} · Estate tax of ${fP(e.estateTax)}`;
+  document.getElementById('estateSub').textContent=
+    `After paying estate tax, the distributable net estate is ${fP(e.netAfterTax)}. Based on your surviving heirs, the legitime (compulsory share) is ${fP(e.totalLegitme)} and the free portion is ${fP(e.freePortion)}.`;
+
+  // Asset cards
+  document.getElementById('eTotalFinancial').textContent=fP(e.totalFinancial);
+  document.getElementById('eNonFinancial').textContent=fP(e.nonFinancial);
+  document.getElementById('eGrossEstate').textContent=fP(e.grossEstate);
+
+  // Deduction list
+  document.getElementById('deductionList').innerHTML=`
+    <div class="d-row"><span class="d-label">Standard Deduction (TRAIN Law)</span><span class="d-val">(${fP(e.stdDeduction)})</span></div>
+    <div class="d-row"><span class="d-label">Family Home (up to ₱10M)</span><span class="d-val">(${fP(e.familyHomeDeduct)})</span></div>
+    <div class="d-row"><span class="d-label">Funeral &amp; Judicial Expenses (max ₱200K)</span><span class="d-val">(${fP(e.funeralExpenses,0)})</span></div>
+    <div class="d-row"><span class="d-label">Liabilities / Claims Against Estate</span><span class="d-val">(${fP(e.liabilities)})</span></div>
+    <div class="d-row total"><span class="d-label">Total Allowable Deductions</span><span class="d-val">(${fP(e.totalDeductions)})</span></div>`;
+
+  document.getElementById('eNetEstate').textContent=fP(e.netTaxableEstate);
+  document.getElementById('eEstateTax').textContent=fP(e.estateTax);
+  document.getElementById('eNetAfterTax').textContent=fP(e.netAfterTax);
+
+  // Legitime summary
+  document.getElementById('eTotalLegit').textContent=fP(e.totalLegitme);
+  document.getElementById('eLegitPct').textContent=e.netAfterTax>0?`${fPct(e.totalLegitme/e.netAfterTax)} of net estate after tax`:'—';
+  document.getElementById('eFreePortion').textContent=fP(e.freePortion);
+  document.getElementById('eFreePct').textContent=e.netAfterTax>0?`${fPct(e.freePortion/e.netAfterTax)} of net estate after tax`:'—';
+
+  // Heirs table
+  const rows=[];
+  const pct=n=>e.netAfterTax>0?fPct(n/e.netAfterTax):'—';
+  if(e.legitChildrenN>0) rows.push({heir:'Legitimate Children',count:e.legitChildrenN,total:e.legitChildTotal,pct:pct(e.legitChildTotal),per:e.perLegitChild});
+  if(e.survivingSpouse==='Yes') rows.push({heir:'Surviving Spouse',count:1,total:e.spouseShare,pct:pct(e.spouseShare),per:e.spouseShare});
+  if(e.illegitChildrenN>0) rows.push({heir:'Illegitimate Children',count:e.illegitChildrenN,total:e.illegitChildTotal,pct:pct(e.illegitChildTotal),per:e.perIllegitChild});
+  if(e.legitParents==='Yes'&&e.legitChildrenN===0) rows.push({heir:'Legitimate Parents',count:1,total:e.legitParentShare,pct:pct(e.legitParentShare),per:e.legitParentShare});
+  if(e.illegitParents==='Yes'&&e.legitChildrenN===0&&e.illegitChildrenN===0) rows.push({heir:'Illegitimate Parents',count:1,total:e.illegitParentShare,pct:pct(e.illegitParentShare),per:e.illegitParentShare});
+
+  document.getElementById('heirsTbody').innerHTML=
+    rows.map(r=>`<tr><td>${r.heir}</td><td style="text-align:center">${r.count}</td><td style="text-align:right">${fP(r.total)}</td><td style="text-align:right">${r.pct}</td><td style="text-align:right">${fP(r.per)}</td></tr>`).join('')+
+    `<tr class="total-row"><td>Total Legitime</td><td></td><td style="text-align:right">${fP(e.totalLegitme)}</td><td style="text-align:right">${pct(e.totalLegitme)}</td><td>—</td></tr>`+
+    `<tr class="free-row"><td>Free Portion (Testator's Discretion)</td><td></td><td style="text-align:right">${fP(e.freePortion)}</td><td style="text-align:right">${pct(e.freePortion)}</td><td>—</td></tr>`;
+}
+
+/* ── CHARTS ── */
+function renderCharts(c,e){
+  drawBalanceChart(c);
+  drawYearsChart(c);
+  drawEstateChart(e);
+}
+
+function drawBalanceChart(c){
+  const canvas=document.getElementById('chartBalance');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||380,H=170;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+  const pad={t:8,r:8,b:26,l:56};const cw=W-pad.l-pad.r,ch=H-pad.t-pad.b;
+  const d1=c.t1.rows.map(r=>Math.max(0,r.endFund));
+  const d2=c.t2.rows.map(r=>Math.max(0,r.endFund));
+  const d3=[];{let f=c.netCash;for(let y=1;y<=c.period;y++){const w=c.annualGap>0?c.annualGap*Math.pow(1+c.inf,y-1):0;f=f*(1+c.r)-w;d3.push(Math.max(0,f));}}
+  const maxV=Math.max(...d1,...d2,...d3,1);
+  ctx.clearRect(0,0,W,H);
+  for(let i=0;i<=4;i++){const y=pad.t+ch-(i/4)*ch;ctx.strokeStyle='#f0eeeb';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cw,y);ctx.stroke();ctx.fillStyle='#9c9891';ctx.font='9px Arial';ctx.textAlign='right';ctx.fillText(abbr(maxV*i/4),pad.l-3,y+3.5);}
+  const skip=Math.ceil(c.period/8);
+  for(let i=0;i<c.period;i++){if(i%skip!==0&&i!==c.period-1)continue;const x=pad.l+(i/(c.period-1||1))*cw;ctx.fillStyle='#9c9891';ctx.textAlign='center';ctx.font='8px Arial';ctx.fillText('Yr'+(i+1),x,H-5);}
+  [[d1,'#9B1B2A'],[d2,'#C9A84C'],[d3,'#5a9e80']].forEach(([d,col])=>{ctx.beginPath();ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.lineJoin='round';d.forEach((v,i)=>{const x=pad.l+(i/(d.length-1||1))*cw,y=pad.t+ch-(v/maxV)*ch;i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});ctx.stroke();});
+}
+
+function drawYearsChart(c){
+  const canvas=document.getElementById('chartYears');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||380,H=170;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+  const scenarios=[{label:'Live Comfortably',yrs:c.period,color:'#9B1B2A'},{label:'Live Safe',yrs:c.period,color:'#C9A84C'},{label:'Live Within Means',yrs:Math.min(c.yearsFundLasts,c.period+10),color:'#5a9e80'}];
+  const maxYrs=Math.max(...scenarios.map(s=>s.yrs),c.period,1);
+  const pad={t:14,r:10,b:14,l:10};const cw=W-pad.l-pad.r;const barH=36,gapH=14;
+  ctx.clearRect(0,0,W,H);
+  const targetW=(c.period/maxYrs)*cw;
+  scenarios.forEach((sc,i)=>{
+    const y=pad.t+i*(barH+gapH);const bw=(sc.yrs/maxYrs)*cw;
+    ctx.fillStyle='#f4f3f1';ctx.beginPath();ctx.roundRect(pad.l,y,cw,barH,3);ctx.fill();
+    ctx.strokeStyle='#9c9891';ctx.lineWidth=1.5;ctx.setLineDash([3,3]);ctx.beginPath();ctx.moveTo(pad.l+targetW,y);ctx.lineTo(pad.l+targetW,y+barH);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle=sc.color;ctx.beginPath();ctx.roundRect(pad.l,y,Math.max(4,bw),barH,3);ctx.fill();
+    ctx.fillStyle='#fff';ctx.font='bold 10px Montserrat,Arial';ctx.textAlign='left';ctx.fillText(sc.yrs>=c.period?`${c.period}+ yrs`:`${sc.yrs} yrs`,pad.l+7,y+barH/2+3.5);
+    ctx.fillStyle=sc.color;ctx.font='bold 8px Arial';ctx.textAlign='left';ctx.fillText(sc.label,pad.l,y-1);
+  });
+  ctx.fillStyle='#9c9891';ctx.font='7px Arial';ctx.textAlign='center';ctx.fillText(`${c.period}yr target`,pad.l+targetW,H-1);
+}
+
+function drawEstateChart(e){
+  const canvas=document.getElementById('chartEstate');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.offsetWidth||380,H=160;
+  canvas.width=W*devicePixelRatio;canvas.height=H*devicePixelRatio;ctx.scale(devicePixelRatio,devicePixelRatio);
+  ctx.clearRect(0,0,W,H);
+
+  // Horizontal stacked bar: tax | legitime | free portion
+  const total=e.netTaxableEstate||1;
+  const segments=[
+    {label:'Estate Tax (6%)',val:e.estateTax,color:'#9B1B2A'},
+    {label:'Legitime',val:e.totalLegitme,color:'#1a2e4a'},
+    {label:'Free Portion',val:e.freePortion,color:'#C9A84C'},
+  ];
+  const pad={t:30,r:10,b:40,l:10};const bw=W-pad.l-pad.r,bh=40;
+  let x=pad.l;
+  segments.forEach(seg=>{
+    const sw=Math.max(0,(seg.val/total)*bw);
+    ctx.fillStyle=seg.color;
+    ctx.fillRect(x,pad.t,sw,bh);
+    if(sw>40){ctx.fillStyle='#fff';ctx.font='bold 9px Arial';ctx.textAlign='center';ctx.fillText(fPct(seg.val/total),x+sw/2,pad.t+bh/2+3.5);}
+    x+=sw;
+  });
+
+  // Legend
+  const legY=pad.t+bh+14;const segW=W/3;
+  segments.forEach((seg,i)=>{
+    const lx=pad.l+i*segW;
+    ctx.fillStyle=seg.color;ctx.fillRect(lx,legY,10,10);
+    ctx.fillStyle='#6a6760';ctx.font='8px Arial';ctx.textAlign='left';
+    ctx.fillText(seg.label,lx+14,legY+8.5);
+    ctx.fillStyle='#2c2a27';ctx.font='bold 8px Arial';
+    ctx.fillText(fP(seg.val),lx+14,legY+19);
+  });
+}
+
+function abbr(n){if(n>=1e9)return(n/1e9).toFixed(1)+'B';if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(0)+'K';return n.toFixed(0);}
+
+/* ── SLIDER ── */
+function initSlider(c){
+  const slider=document.getElementById('spendingSlider');
+  const maxVal=Math.round(c.monthlyExpense*1.5/1000)*1000||200000;
+  slider.max=maxVal;slider.value=Math.round(c.sustainableExpense/12);
+  updateSlider(c);
+  slider.oninput=()=>updateSlider(c);
+}
+function updateSlider(c){
+  const slider=document.getElementById('spendingSlider');
+  const monthly=parseFloat(slider.value);const annual=monthly*12;
+  document.getElementById('sliderVal').textContent=fP(monthly)+'/mo';
+  const gap=Math.max(0,annual-c.estAnnualInflow);
+  let yrs=0;
+  if(gap<=0){yrs=c.period;}else if(c.netCash>0){let f=c.netCash;for(let y=1;y<=100;y++){const w=gap*Math.pow(1+c.inf,y-1);f=f*(1+c.r)-w;if(f<=0){yrs=y-1;break;}yrs=y;}}
+  const isSafe=yrs>=c.period;const diff=monthly-c.sustainableExpense/12;
+  const diffText=diff>0?`${fP(diff)}/mo more than the safe level`:diff<0?`${fP(Math.abs(diff))}/mo below the safe level`:'exactly at the safe level';
+  document.getElementById('adjResult').innerHTML=`At <strong>${fP(monthly)}/month</strong>, your fund will last approximately <strong style="color:${isSafe?'var(--green)':'var(--ruby)'}">${yrs>=c.period?c.period+'+':yrs} years</strong>. That is ${diffText}.`;
+  if(lastR){const t2new=lastR.buildT2(annual);renderTable('tb2','tf2',t2new.rows,t2new,false);}
+}
+
+/* ── TABS ── */
+function switchRTab(idx,btn){
+  document.querySelectorAll('.rtab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.rtab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+function switchTab(idx,btn){
+  document.querySelectorAll('.tab-btn').forEach((b,i)=>b.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+}
+function toggleProj(idx){
+  const body=document.getElementById('proj'+idx);const tog=document.getElementById('ptog'+idx);
+  const open=body.classList.toggle('open');tog.classList.toggle('open',open);
+  tog.childNodes[2].textContent=open?' Hide projection table':' Show year-by-year projection';
+}
+
+/* ── RESET ── */
+function resetForm(){
+  ['age','monthlyIncome','monthlyExpense','cashAvailable','currentInvestment','returnPA',
+   'nonFinancialAssets','liabilities','specialAllotment'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('gender').value='';
+  document.getElementById('retirementPeriod').value='20';
+  document.getElementById('netReturnPA').value='4';
+  document.getElementById('inflation').value='3';
+  document.getElementById('legitChildren').value='0';
+  document.getElementById('illegitChildren').value='0';
+  document.getElementById('survivingSpouse').value='Yes';
+  document.getElementById('legitParents').value='No';
+  document.getElementById('illegitParents').value='No';
+  document.getElementById('emptyState').style.display='';
+  document.getElementById('resultsArea').style.display='none';
+}
+
+/* ── PDF ── */
+function downloadPDF(){
+  if(!lastR||!lastE){alert('Please fill in your details first.');return;}
+  const c=lastR,e=lastE;
+  const now=new Date().toLocaleDateString('en-PH',{year:'numeric',month:'long',day:'numeric'});
+  const pct=n=>e.netAfterTax>0?fPct(n/e.netAfterTax):'—';
+
+  let verdictTitle,verdictClass;
+  if(c.annualGap<=0){verdictTitle='✓ Retirement is Fully Funded';verdictClass='ok';}
+  else if(c.cashShortfall>0){verdictTitle='⚠ Retirement Gap Detected';verdictClass='';}
+  else{verdictTitle='✓ You Are On Track';verdictClass='ok';}
+
+  const heirsRows=[];
+  if(e.legitChildrenN>0)heirsRows.push({heir:'Legitimate Children',count:e.legitChildrenN,total:e.legitChildTotal,per:e.perLegitChild});
+  if(e.survivingSpouse==='Yes')heirsRows.push({heir:'Surviving Spouse',count:1,total:e.spouseShare,per:e.spouseShare});
+  if(e.illegitChildrenN>0)heirsRows.push({heir:'Illegitimate Children',count:e.illegitChildrenN,total:e.illegitChildTotal,per:e.perIllegitChild});
+  if(e.legitParents==='Yes'&&e.legitChildrenN===0)heirsRows.push({heir:'Legitimate Parents',count:1,total:e.legitParentShare,per:e.legitParentShare});
+
+  document.getElementById('pdfReport').innerHTML=`
+    <div class="pdf-cover">
+      <span class="gold">BPI Wealth Management · Personal Wealth Advisory</span>
+      <h1>Wealth Planning Report</h1>
+      <div class="sub">Prepared on ${now} &nbsp;·&nbsp; For illustration purposes only</div>
+    </div>
+
+    <div class="pdf-sec">
+      <div class="pdf-sec-title">Client Inputs</div>
+      <div class="pdf-2col">
+        <div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Age</span><span class="pdf-row-val">${gv('age')||'—'}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Gender</span><span class="pdf-row-val">${gvS('gender')==='F'?'Female':gvS('gender')==='M'?'Male':'—'}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Monthly Retirement Income</span><span class="pdf-row-val">${fP(c.monthlyIncome)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Monthly Retirement Expense</span><span class="pdf-row-val">${fP(c.monthlyExpense)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Retirement Period</span><span class="pdf-row-val">${c.period} years</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Net Return p.a.</span><span class="pdf-row-val">${(c.r*100).toFixed(2)}%</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Annual Inflation</span><span class="pdf-row-val">${(c.inf*100).toFixed(2)}%</span></div>
+        </div>
+        <div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Cash Available for Investment</span><span class="pdf-row-val">${fP(c.cashAvail)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Current Investments</span><span class="pdf-row-val">${fP(c.currentInvest)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Non-Financial Assets</span><span class="pdf-row-val">${fP(e.nonFinancial)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Liabilities</span><span class="pdf-row-val">${fP(c.liabilities)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Special Allotment</span><span class="pdf-row-val">${fP(c.specialAllot)}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Legitimate Children</span><span class="pdf-row-val">${e.legitChildrenN}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Surviving Spouse</span><span class="pdf-row-val">${e.survivingSpouse}</span></div>
+          <div class="pdf-row"><span class="pdf-row-lbl">Illegitimate Children</span><span class="pdf-row-val">${e.illegitChildrenN}</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-sec">
+      <div class="pdf-sec-title">Retirement Planning Findings</div>
+      <div class="pdf-verdict ${verdictClass}"><h3>${verdictTitle}</h3><p>${document.getElementById('verdictSub').textContent}</p></div>
+      <div class="pdf-2col">
+        <div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Total Retirement Fund Needed</div><div class="pdf-stat-val ruby">${c.totalFundRequired>0?fP(c.totalFundRequired+c.currentInvest):'Fully funded'}</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">How Much You Have</div><div class="pdf-stat-val">${fP(c.netCash+c.currentInvest)}</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Additional Fund Needed</div><div class="pdf-stat-val ruby">${c.totalFundRequired>0?fP(c.totalFundRequired):'None'}</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Annual Retirement Gap</div><div class="pdf-stat-val ${c.annualGap>0?'ruby':'green'}">${c.annualGap>0?fP(c.annualGap)+'/yr':'No gap'}</div></div>
+        </div>
+        <div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Fund Duration (desired spending)</div><div class="pdf-stat-val ${c.yearsFundLasts>=c.period?'green':'ruby'}">${c.yearsFundLasts>=c.period?c.period+'+':c.yearsFundLasts} years</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Suggested Monthly Spending</div><div class="pdf-stat-val gold">${fP(c.sustainableExpense/12)}/month</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Shortfall vs. Net Cash</div><div class="pdf-stat-val ${c.cashShortfall>0?'ruby':'green'}">${c.cashShortfall>0?fP(c.cashShortfall):'None'}</div></div>
+        </div>
+      </div>
+      <div class="pdf-sc-box" style="margin-top:8pt">
+        <h3>Option 1 — Live Comfortably</h3>
+        <p style="font-size:8pt;color:#555;margin-bottom:6pt">${c.annualGap>0?`With your existing investment of ${fP(c.currentInvest)}, you will be able to maintain an annual expense of ${fP(c.annualExpense)} (monthly expense × 12). To sustain this for ${c.period} years, a total fund of ${fP(c.totalFundRequired,2)} is required today. Given your net cash available for investment of ${fP(c.netCash)}, you have a shortfall of ${c.cashShortfall>0?fP(c.cashShortfall,2):'\u20B10'} to invest this year.`:`Your investment returns of ${fP(c.incomeFromInvest)}/year and retirement income of ${fP(c.annualIncome)}/year already exceed your annual expense of ${fP(c.annualExpense)}. You have a surplus of ${fP(Math.abs(c.annualGap))}/year — no additional fund is needed.`}</p>
+        <div class="pdf-sc-stats">
+          <div><div class="pdf-stat-label">Fund Required</div><div class="pdf-stat-val ruby">${fP(c.totalFundRequired)}</div></div>
+          <div><div class="pdf-stat-label">Shortfall vs. Net Cash</div><div class="pdf-stat-val ${c.cashShortfall>0?'ruby':'green'}">${c.cashShortfall>0?fP(c.cashShortfall):'Fully funded'}</div></div>
+        </div>
+      </div>
+      <div class="pdf-sc-box">
+        <h3>Option 2 — Live Safe</h3>
+        <p style="font-size:8pt;color:#555;margin-bottom:6pt">${c.annualGap<=0?`Your retirement income of ${fP(c.annualIncome)}/year and investment returns of ${fP(c.incomeFromInvest)}/year already cover your expenses in full. Your net cash of ${fP(c.netCash)} can support up to ${fP(c.sustainableExpense/12)}/month for the full ${c.period}-year period.`:`Considering your retirement income of ${fP(c.annualIncome)}/year and estimated gains from your existing investment of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow), your net cash of ${fP(c.netCash)} can sustainably support up to ${fP(c.sustainableExpense/12)}/month (${fP(c.sustainableExpense)}/year at today's value) for the full ${c.period}-year retirement period.`}</p>
+        <div class="pdf-sc-stats">
+          <div><div class="pdf-stat-label">Recommended Monthly Expense</div><div class="pdf-stat-val gold">${fP(c.sustainableExpense/12)}</div></div>
+          <div><div class="pdf-stat-label">Annual Expense (today's value)</div><div class="pdf-stat-val gold">${fP(c.sustainableExpense)}</div></div>
+          <div><div class="pdf-stat-label">Fund Used</div><div class="pdf-stat-val">${fP(c.netCash)}</div></div>
+        </div>
+      </div>
+      <div class="pdf-sc-box">
+        <h3>Option 3 — Live Within Means</h3>
+        <p style="font-size:8pt;color:#555;margin-bottom:6pt">${c.annualGap<=0?`Your investment returns of ${fP(c.incomeFromInvest)}/year and total inflow of ${fP(c.estAnnualInflow)}/year already exceed your annual expense of ${fP(c.annualExpense)}. There is no investment gap — your fund will comfortably last beyond the full ${c.period}-year retirement period.`:c.yearsFundLasts>=c.period?`Supplemented by your investment returns of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow including regular income), you will have an investment gap of ${fP(c.annualGap)}/year. Your fund will last the full ${c.period}-year retirement period.`:`Supplemented by your investment returns of ${fP(c.incomeFromInvest)}/year (${fP(c.estAnnualInflow)}/year total inflow including regular income), you will have an investment gap of ${fP(c.annualGap)}/year. At your desired spending of ${fP(c.monthlyExpense)}/month, your fund will last about ${c.yearsFundLasts} years — ${c.period-c.yearsFundLasts} years short of your target.`}</p>
+        <div class="pdf-sc-stats">
+          <div><div class="pdf-stat-label">Fund Duration</div><div class="pdf-stat-val ${c.yearsFundLasts>=c.period?'green':'ruby'}">${c.yearsFundLasts>=c.period?c.period+'+':c.yearsFundLasts} years</div></div>
+          <div><div class="pdf-stat-label">Annual Gap</div><div class="pdf-stat-val ${c.annualGap>0?'ruby':'green'}">${c.annualGap>0?fP(c.annualGap):'No gap — surplus of '+fP(Math.abs(c.annualGap))}</div></div>
+          <div><div class="pdf-stat-label">Net Cash Used</div><div class="pdf-stat-val">${fP(c.netCash)}</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pdf-sec">
+      <div class="pdf-sec-title navy">Estate Planning Findings</div>
+      <div class="pdf-verdict estate" style="border-left-color:#1a2e4a;background:#f0f4f9">
+        <h3>Estate Summary</h3>
+        <p>${document.getElementById('estateSub').textContent}</p>
+      </div>
+      <div class="pdf-2col" style="margin-bottom:8pt">
+        <div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Gross Estate</div><div class="pdf-stat-val navy">${fP(e.grossEstate)}</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Total Deductions</div><div class="pdf-stat-val">(${fP(e.totalDeductions)})</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Net Taxable Estate</div><div class="pdf-stat-val ruby">${fP(e.netTaxableEstate)}</div></div>
+        </div>
+        <div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Estate Tax (6%)</div><div class="pdf-stat-val ruby">${fP(e.estateTax)}</div></div>
+          <div class="pdf-stat"><div class="pdf-stat-label">Net Estate After Tax</div><div class="pdf-stat-val green">${fP(e.netAfterTax)}</div></div>
+        </div>
+      </div>
+      <div class="pdf-2col" style="margin-bottom:8pt">
+        <div><div class="pdf-stat"><div class="pdf-stat-label">Total Legitime</div><div class="pdf-stat-val gold">${fP(e.totalLegitme)}</div></div></div>
+        <div><div class="pdf-stat"><div class="pdf-stat-label">Free Portion</div><div class="pdf-stat-val gold">${fP(e.freePortion)}</div></div></div>
+      </div>
+      <table class="pdf-ht">
+        <thead><tr><th>Heir</th><th>Count</th><th>Legitime Amount</th><th>% of Net Estate</th><th>Per Heir</th></tr></thead>
+        <tbody>
+          ${heirsRows.map(r=>`<tr><td>${r.heir}</td><td style="text-align:center">${r.count}</td><td style="text-align:right">${fP(r.total)}</td><td style="text-align:right">${pct(r.total)}</td><td style="text-align:right">${fP(r.per)}</td></tr>`).join('')}
+          <tr class="total-row"><td>Total Legitime</td><td></td><td style="text-align:right">${fP(e.totalLegitme)}</td><td style="text-align:right">${pct(e.totalLegitme)}</td><td>—</td></tr>
+          <tr class="free-row"><td>Free Portion</td><td></td><td style="text-align:right">${fP(e.freePortion)}</td><td style="text-align:right">${pct(e.freePortion)}</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pdf-footer">
+      <strong>Disclaimer:</strong> This report is for illustration purposes only. Estate computations are based on TRAIN Law (RA 10963) and the Civil Code of the Philippines. Actual deductions may vary. This is not financial or legal advice. Consult a licensed financial advisor and estate planning attorney for personalized guidance.<br>
+      Generated by Navigate Wealth Planning Calculator · BPI Wealth Management
+    </div>`;
+
+  window.print();
+}
+
+/* ── EVENT WIRING ── */
+const CURRENCY_INPUT_IDS=['monthlyIncome','monthlyExpense','cashAvailable','currentInvestment','nonFinancialAssets','liabilities','specialAllotment'];
+const OTHER_INPUT_IDS=['age','gender','returnPA','retirementPeriod','netReturnPA','inflation','legitChildren','illegitChildren','survivingSpouse','legitParents','illegitParents'];
+
+CURRENCY_INPUT_IDS.forEach(id=>{
+  const el=document.getElementById(id);if(!el)return;
+  el.addEventListener('input',()=>{handleCurrencyInput(el);render();});
+  el.addEventListener('change',render);
+  el.addEventListener('paste',()=>{setTimeout(()=>{handleCurrencyInput(el);render();},0);});
+});
+
+OTHER_INPUT_IDS.forEach(id=>{
+  const el=document.getElementById(id);
+  if(el){el.addEventListener('input',render);el.addEventListener('change',render);}
+});
+
+window.addEventListener('resize',()=>{if(lastR&&lastE)renderCharts(lastR,lastE);});
+render();
+</script>
+</body>
+</html>
